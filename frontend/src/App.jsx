@@ -1,92 +1,54 @@
-import React, { useState } from "react";
-import axios from "axios";
+import Spline from '@splinetool/react-spline';
+import './App.css';
 
 function App() {
-  const [file, setFile] = useState(null);
-  const [generations, setGenerations] = useState(10);
-  const [selection, setSelection] = useState("neutral");
-  const [result, setResult] = useState(null);
-  const [loading, setLoading] = useState(false);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!file) return alert("Please upload a VCF file!");
-
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("generations", generations);
-    formData.append("selection", selection);
-
-    setLoading(true);
-    try {
-      const res = await axios.post("http://127.0.0.1:8000/simulate_file", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      setResult(res.data);
-    } catch (err) {
-      console.error(err);
-      alert("Simulation failed!");
-    }
-    setLoading(false);
-  };
-
   return (
-    <div style={{ padding: "2rem", fontFamily: "Arial" }}>
-      <h1>🧬 DNA Evolution Simulator</h1>
-      <form onSubmit={handleSubmit} style={{ marginBottom: "2rem" }}>
-        <div>
-          <label>Upload VCF File:</label><br />
-          <input type="file" accept=".vcf" onChange={(e) => setFile(e.target.files[0])} />
-        </div>
+    <main style={{ height: '100vh', overflow: 'hidden', position: 'relative' }}>
+      {/* 3D DNA background */}
+      <Spline
+        scene="https://prod.spline.design/bLeBntrIRFvpPDsE/scene.splinecode"
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: 0,
+        }}
+      />
 
-        <div style={{ marginTop: "1rem" }}>
-          <label>Generations:</label><br />
-          <input
-            type="number"
-            value={generations}
-            onChange={(e) => setGenerations(e.target.value)}
-            min="1"
-          />
-        </div>
-
-        <div style={{ marginTop: "1rem" }}>
-          <label>Selection Type:</label><br />
-          <select value={selection} onChange={(e) => setSelection(e.target.value)}>
-            <option value="neutral">Neutral</option>
-            <option value="beneficial">Beneficial</option>
-            <option value="deleterious">Deleterious</option>
-          </select>
-        </div>
-
+      {/* Overlay text or simulator */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '20%',
+          left: '10%',
+          zIndex: 1,
+          color: 'white',
+          backgroundColor: 'rgba(0,0,0,0.4)',
+          padding: '2rem',
+          borderRadius: '1rem',
+        }}
+      >
+        <h1 style={{ fontSize: '3rem', marginBottom: '1rem' }}>
+          DNA Evolution Simulator
+        </h1>
+        <p>Explore the evolution of alleles across generations 🧬</p>
         <button
-          type="submit"
-          style={{ marginTop: "1rem", padding: "0.5rem 1rem", cursor: "pointer" }}
+          style={{
+            marginTop: '1rem',
+            background: 'linear-gradient(90deg,#ff00cc,#3333ff)',
+            color: 'white',
+            border: 'none',
+            padding: '0.8rem 1.5rem',
+            borderRadius: '8px',
+            cursor: 'pointer',
+          }}
         >
-          {loading ? "Simulating..." : "Run Simulation"}
+          Start Simulation
         </button>
-      </form>
-
-      {result && (
-        <div>
-          <h2>Simulation Results</h2>
-          <p><strong>File:</strong> {result.file}</p>
-          <p><strong>Model:</strong> {result.selection_model}</p>
-          <p><strong>Generations:</strong> {result.generations}</p>
-          <p><strong>Mean Allele Frequency:</strong> {result.mean_frequency.toFixed(4)}</p>
-
-          <h3>Allele Frequencies:</h3>
-          <pre style={{
-            background: "#f4f4f4",
-            padding: "1rem",
-            borderRadius: "6px",
-            maxHeight: "200px",
-            overflowY: "scroll"
-          }}>
-            {JSON.stringify(result.final_frequencies, null, 2)}
-          </pre>
-        </div>
-      )}
-    </div>
+      </div>
+    </main>
   );
 }
 
