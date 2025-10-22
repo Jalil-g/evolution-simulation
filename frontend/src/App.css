@@ -1,42 +1,102 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+/* Make the canvas fill the screen and ignore mouse/touch */
+.spline-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;          /* <<< disables interaction */
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* Spline injects a <canvas> — ensure it stretches */
+.spline-bg canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+  filter: brightness(0.8) saturate(1.15); /* optional: make scene moodier */
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Foreground layout */
+.hero {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  padding: 6rem 2rem 3rem;
+  display: grid;
+  align-content: start;
+  gap: 2rem;
+  color: #eef2ff;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.title h1 {
+  font-size: clamp(2rem, 3vw + 1rem, 3.5rem);
+  line-height: 1.1;
+  margin: 0 0 0.25rem;
+  text-shadow: 0 10px 30px rgba(0,0,0,.5);
 }
 
-.card {
-  padding: 2em;
+.title p {
+  opacity: .9;
+  margin: 0;
 }
 
-.read-the-docs {
-  color: #888;
+/* Glassy control panel */
+.panel {
+  width: min(560px, 95vw);
+  padding: 1.25rem;
+  border-radius: 16px;
+  background: rgba(10, 12, 24, 0.55);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.35),
+    inset 0 1px 0 rgba(255,255,255,.05);
+  display: grid;
+  gap: 1rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.field span {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.field input[type="file"],
+.field input[type="number"],
+.field select {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(20, 22, 36, 0.7);
+  color: #e9eeff;
+  outline: none;
+}
+
+.field input[type="number"]:focus,
+.field select:focus {
+  border-color: #8ab4ff;
+  box-shadow: 0 0 0 3px rgba(138,180,255,.15);
+}
+
+/* Gradient button */
+.btn-run {
+  margin-top: 0.5rem;
+  padding: 0.8rem 1.25rem;
+  border: 0;
+  border-radius: 12px;
+  color: white;
+  cursor: pointer;
+  background: linear-gradient(90deg, #ff3cac, #784ba0 40%, #2b86c5);
+  box-shadow: 0 10px 25px rgba(43,134,197,.35);
+  transition: transform .08s ease, box-shadow .15s ease, filter .15s ease;
+}
+
+.btn-run:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.03);
+  box-shadow: 0 12px 28px rgba(43,134,197,.45);
 }
